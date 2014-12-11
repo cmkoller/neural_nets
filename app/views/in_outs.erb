@@ -1,0 +1,90 @@
+<h3>Now it's some to set some inputs and outputs for your neural net.</h3>
+
+<p>Each "input node" can take in either a 1 or a 0. Different patterns of
+1s and 0s can represent different things in the model you create. For example,
+I can decide "1001" means "red", and "0110" means "blue" - and from there, I
+can train my neural net to respond based on the "colors" I'm showing it.</p>
+
+<p>Outputs are also shown as patterns of 1s and 0s. Your job is to pick
+which patterns of 1s and 0s represent the outputs you want to get from your
+neural net. For example, you can decide that "101" means "yes" and "000" means
+"no".</p>
+
+<p>On this page, use the tools below to create input patterns and assign them
+to their desired output patterns. Remember that while to the neural net,
+your inputs and outputs are just ones and zeros, you should assign them a
+meaning to make the process more useful.</p>
+
+<!-- Start NN display -->
+<div class="columns small-3">
+  <h5>Here's what your neural net looks like:</h5>
+</div>
+<!--End NN display-->
+
+<!-- Start In/Out Creation -->
+<div class="columns small-6">
+  <form method="post">
+    <div class="row">
+      <div class="columns small-12">
+        <h4>Create an input:</h4>
+        <div class="row inputs">
+          <label for="input_name">Input Name:</label>
+          <input type="text" name="input_name">
+          <% if @first_layer_size > 0 %>
+            <% @first_layer_size.times do |i| %>
+            <div class="columns text-center small-<%= 12/@first_layer_size %>">
+              <input type="checkbox" name="input_<%= i %>" id="input_<%= i %>" class="css-checkbox" />
+              <label for="input_<%= i %>" class="css-label"></label>
+            </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns small-12">
+        <h4>Pick a desired output:</h4>
+        <label for="output_name">Input Name:</label>
+        <input type="text" name="output_name">
+        <% if @last_layer_size > 0 %>
+          <% @last_layer_size.times do |i| %>
+          <div class="columns text-center small-<%= 12/@last_layer_size %>">
+            <input type="checkbox" name="output_<%= i %>" id="output_<%= i %>" class="css-checkbox" />
+            <label for="output_<%= i %>" class="css-label"></label>
+          </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <input type="submit" value="Submit">
+  </form>
+</div>
+<!-- End In/Out Creation -->
+
+<div class="columns small-3">
+  <div class="row presets">
+    <h3>Preset Pairings</h3>
+    <div class="columns small-12">
+      <ul>
+        <% inputs = PresetInput.where(net_id: @net.id) %>
+        <% inputs.each do |input| %>
+          <li class="input">
+            <p>Input: <%= input.name %></p>
+            <% input.values.split("").each do |node| %>
+              <div class="in-out-node value-<%= node %>"></div>
+            <% end %>
+          </li>
+          <li class="output">
+            <% output = DesiredOutput.find_by(preset_input_id: input.id) %>
+            <p>Desired Output: <%= output.name %></p>
+            <% output.values.split("").each do |node| %>
+            <div class="in-out-node value-<%= node %>"></div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<a href="/net/<%= params[:id] %>/run" class="button">I'm done!</a>

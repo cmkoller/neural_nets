@@ -1,5 +1,7 @@
 class Net < ActiveRecord::Base
   has_many :nodes
+  has_many :preset_inputs
+  has_many :desired_outputs
 
   # ====================
   # HELPER FUNCTIONS
@@ -23,6 +25,18 @@ class Net < ActiveRecord::Base
       num_layers += 1
     end
     num_layers
+  end
+
+  # FIRST_LAYER_NODES
+  # --------------------
+  def first_layer_nodes
+    layer_n_nodes(0)
+  end
+
+  # LAST_LAYER_NODES
+  # --------------------
+  def last_layer_nodes
+    layer_n_nodes(num_layers - 1)
   end
 
   # LOOP_OVER_NODES
@@ -118,16 +132,15 @@ class Net < ActiveRecord::Base
   def feed_forward(input)
     reset_all_nodes
 
-    layer_0 = layer_n_nodes(0)
     # Check for wrong number of inputs
-    unless input.length == layer_0.length
+    unless input.length == first_layer_nodes.length
       return "ERROR - wrong number of inputs."
     end
 
     puts "LAYER 1 INPUTS"
     # Pass input values to first layer of nodes
     loop_over_nodes(0) do |i|
-      node = layer_0[i]
+      node = first_layer_nodes[i]
       node.total_input = input[i]
       node.save
     end
@@ -145,7 +158,6 @@ class Net < ActiveRecord::Base
     end
 
     # Once we've fed forward to the last layer, calculate last layer's output
-    last_layer_nodes = layer_n_nodes(num_layers - 1)
     loop_over_nodes(num_layers - 1) do |i|
       node = last_layer_nodes[i]
       node.update_output

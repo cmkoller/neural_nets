@@ -1,0 +1,82 @@
+<h1>Set up your net!</h1>
+<h5>Add and delete nodes until you get a structure you're happy with.</h5>
+
+<% num_inputs = @net.layer_n_nodes(0).length %>
+<form action="/net/<%= @id %>" method="post">
+  <div class="row inputs">
+    <div class="columns small-10 small-offset-1">
+      <% if num_inputs > 0 %>
+        <% num_inputs.times do |i| %>
+          <div class="columns text-center small-<%= 12/num_inputs %>">
+            <input type="checkbox" name="input_<%= i %>" value="1" class="input">
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="columns small-1">
+      <input type="hidden" name="feed_forward" value="true">
+      <input type="submit" value="Run NN">
+    </div>
+  </div>
+</form>
+
+<!-- START PRINTING LAYERS -->
+<% @net.num_layers.times do |l| %>
+  <div class="row layer">
+    <h6>Layer #<%= l %></h6>
+    <!-- START DELETE BUTTON -->
+    <div class="columns small-1">
+      <form action="/net/<%= @id %>" method="post">
+        <input type="hidden" name="delete" value="<%= l %>">
+        <input type="submit" value="X">
+      </form>
+    </div>
+    <!-- END DELETE BUTTON -->
+    <% num_nodes = @net.layer_n_nodes(l).length %>
+    <!-- START PRINTING NODES -->
+    <div class="columns small-10">
+      <% @net.loop_over_nodes(l) do |i| %>
+        <div class="columns text-center small-<%= 12/num_nodes %>">
+          <div class="node"></div>
+        </div>
+      <% end %>
+    </div>
+    <!-- END PRINTING NODES -->
+    <!-- START ADD BUTTON -->
+    <div class="columns small-1">
+      <form action="/net/<%= @id %>" method="post">
+        <input type="hidden" name="add" value="<%= l %>">
+        <input type="submit" value="+">
+      </form>
+    </div>
+    <!-- END ADD BUTTON -->
+  </div>
+<% end %>
+<!-- END PRINTING LAYERS -->
+
+<div class="row layer">
+  <div class="columns small-1">
+    <form action="/net/<%= @id %>" method="post">
+      <input type="submit" value="X">
+    </form>
+  </div>
+
+  <div class="columns small-1 small-offset-10">
+    <form action="/net/<%= @id %>" method="post">
+      <input type="hidden" name="add" value="<%= @net.num_layers %>">
+      <input type="submit" value="+">
+    </form>
+  </div>
+</div>
+
+<a href="/net/<%= @id %>/inputs" class="button text-center"><h3>I'm done!</h3></a>
+
+
+<h3>inputs:</h3>
+<div class="row layer">
+  <% inputs = @net.layer_n_nodes(0) %>
+  <% inputs.each do |node| %>
+    <p><%= node.id %></p>
+    <p><%= node.total_input %></p>
+  <% end %>
+</div>

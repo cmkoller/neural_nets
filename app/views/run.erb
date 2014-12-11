@@ -1,0 +1,74 @@
+<div class="columns small-3">
+  <div class="row presets">
+    <h3>Preset Pairings</h3>
+    <div class="columns small-12">
+      <form method="get">
+        <% inputs = PresetInput.where(net_id: @net.id) %>
+        <% inputs.each do |input| %>
+          <input type="radio" name="selected_input" value="<%= input.id %>">
+          <label for="<%= input.id %>">
+            <li class="input">
+              <p>Input: <%= input.name %></p>
+              <% input.values.split("").each do |node| %>
+              <div class="in-out-node value-<%= node %>"></div>
+              <% end %>
+            </li>
+            <li class="output">
+              <% output = DesiredOutput.find_by(preset_input_id: input.id) %>
+              <p>Desired Output: <%= output.name %></p>
+              <% output.values.split("").each do |node| %>
+              <div class="in-out-node value-<%= node %>"></div>
+              <% end %>
+            </li>
+          </label>
+        <% end %>
+        <input type="hidden" name="feed_forward" value="true">
+        <input type="submit" value="Run This Input">
+      </form>
+    </div>
+  </div>
+</div>
+<!-- START PRINTING LAYERS -->
+<div class="columns small-9">
+  <% if @input %>
+    <div class="row layer inputs">
+      <div class="columns small-12">
+        <h5>Selected Input:</h5>
+        <% @input.values.split("").each do |node| %>
+          <div class="in-out-node value-<%= node %>"></div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  <% @net.num_layers.times do |l| %>
+    <div class="row layer">
+      <div class="columns small-12">
+        <h6>Layer #<%= l %></h6>
+        <% num_nodes = @net.layer_n_nodes(l).length %>
+      <!-- START PRINTING NODES -->
+        <% @net.loop_over_nodes(l) do |i| %>
+          <div class="columns text-center small-<%= 12/num_nodes %>">
+            <div class="node">
+              <p><%= @net.layer_n_nodes(l)[i].total_input.round(3) %></p>
+              <p><%= @net.layer_n_nodes(l)[i].output.round(3) %></p>
+              </div>
+          </div>
+        <% end %>
+      </div>
+      <!-- END PRINTING NODES -->
+    </div>
+  <% end %>
+  <!-- END PRINTING LAYERS -->
+</div>
+
+
+<h3>Output:</h3>
+<div class="row layer">
+  <% output = @net.get_outputs %>
+  <% output.each do |num| %>
+  <div class="columns text-center small-<%= 12/output.length %>">
+    <p><%= num %></p>
+    <div class="node" style="background-color: rgba(0,0,0,<%= num %>);"></div>
+  </div>
+  <% end %>
+</div>

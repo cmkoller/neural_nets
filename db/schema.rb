@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141210183928) do
+ActiveRecord::Schema.define(version: 20141211171028) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,13 @@ ActiveRecord::Schema.define(version: 20141210183928) do
     t.float   "weight"
   end
 
+  create_table "desired_outputs", force: true do |t|
+    t.integer "net_id",          null: false
+    t.integer "preset_input_id"
+    t.string  "values",          null: false
+    t.string  "name",            null: false
+  end
+
   create_table "nets", force: true do |t|
   end
 
@@ -30,6 +37,12 @@ ActiveRecord::Schema.define(version: 20141210183928) do
     t.integer "layer"
     t.float   "output",      default: 0.0
     t.float   "total_input", default: 0.0
+  end
+
+  create_table "preset_inputs", force: true do |t|
+    t.integer "net_id", null: false
+    t.string  "values", null: false
+    t.string  "name",   null: false
   end
 
 end
