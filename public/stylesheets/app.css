@@ -1,0 +1,24 @@
+#star-demo {
+  display: block;
+  margin: auto;
+}
+
+body {
+  color: blue;
+}
+
+.node {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background: #00f;
+}
+
+input, .node {
+  display: inline-block;
+}
+
+.layer {
+  border-bottom: 3px double black;
+  padding: 10px;
+}

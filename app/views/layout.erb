@@ -3,12 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello World</title>
+    <title>Neural Net Builder</title>
+
     <link rel="stylesheet" href="/stylesheets/app.css" />
+    <link rel="stylesheet" href="/stylesheets/foundation.min.css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="/stylesheets/normalize.css" media="screen" charset="utf-8">
+    <script src="/javascripts/modernizr.js"></script>
   </head>
   <body>
-    <%= yield %>
 
-    <script src="/javascripts/app.js"></script>
+    <div class="container">
+      <div class="row">
+        <div class="large-12 columns">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/interact.min.js"></script>
+    <script type="text/javascript" src="/javascripts/app.js"></script> -->
   </body>
 </html>
